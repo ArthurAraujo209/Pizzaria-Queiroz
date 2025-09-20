@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizzaria Queiroz - Cardápio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-primary: #8B0000;
+            --color-secondary: #FFD700;
+            --color-accent: #8B4513;
+            --color-light: #FFF5E1;
+            --color-dark: #3C2A21;
+            --color-text: #333333;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--color-light);
+            color: var(--color-text);
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        nav {
+            background-color: var(--color-secondary);
+            padding: 15px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-btn {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--color-accent);
+            transform: translateY(-3px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .category {
+            margin-bottom: 40px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .category.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .category-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .category-content {
+            padding: 20px;
+        }
+
+        .pizza-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .pizza-table th {
+            background-color: var(--color-secondary);
+            color: var(--color-dark);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .pizza-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pizza-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .pizza-table tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        .pizza-name {
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .pizza-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .pizza-price {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .item-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-header {
+            background-color: var(--color-secondary);
+            padding: 10px 15px;
+            font-weight: bold;
+            color: var(--color-dark);
+        }
+
+        .item-body {
+            padding: 15px;
+        }
+
+        .item-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .item-price {
+            font-weight: bold;
+            color: var(--color-primary);
+            font-size: 1.1rem;
+        }
+
+        .sizes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .size-item {
+            background-color: #f0f0f0;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .size-name {
+            font-weight: bold;
+            color: var(--color-accent);
+        }
+
+        .size-price {
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 40px;
+        }
+
+        .whatsapp-btn {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: var(--transition);
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+            transform: scale(1.05);
+        }
+
+        .banner {
+            height: 200px;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%238B0000"/><circle cx="50" cy="50" r="40" fill="%23FFD700" opacity="0.3"/></svg>');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .banner h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+            
+            .pizza-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .banner h1 {
+                font-size: 1.8rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">PIZZARIA QUEIROZ</div>
+        <p>Cardápio Digital</p>
+    </header>
+
+    <nav>
+        <div class="nav-container">
+            <button class="nav-btn" data-target="sizes">Tamanhos</button>
+            <button class="nav-btn" data-target="borders">Bordas</button>
+            <button class="nav-btn" data-target="savory-pizzas">Pizzas Salgadas</button>
+            <button class="nav-btn" data-target="sweet-pizzas">Pizzas Doces</button>
+            <button class="nav-btn" data-target="portions">Porções</button>
+            <button class="nav-btn" data-target="tapiocas-salgadas">Tapiocas Salgadas</button>
+            <button class="nav-btn" data-target="tapiocas-doces">Tapiocas Doces</button>
+            <button class="nav-btn" data-target="drinks">Bebidas</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="banner">
+            <h1>As melhores pizzas da região!</h1>
+        </div>
+
+        <!-- Tamanhos -->
+        <section id="sizes" class="category visible">
+            <div class="category-header">
+                <h2>Tamanhos e Valores</h2>
+            </div>
+            <div class="category-content">
+                <table class="pizza-table">
+                    <tr>
+                        <th>Tamanho</th>
+                        <th>Descrição</th>
+                        <th>Preço</th>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">MINI</td>
+                        <td class="pizza-description"></td>
+                        <td class="pizza-price">R$ 8,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">BROTO</td>
+                        <td class="pizza-description">4 fatias pequenas</td>
+                        <td class="pizza-price">R$ 17,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">PEQUENA</td>
+                        <td class="pizza-description">4 fatias</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">MÉDIA</td>
+                        <td class="pizza-description">6 fatias</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">GRANDE</td>
+                        <td class="pizza-description">8 fatias</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Bordas -->
+        <section id="borders" class="category visible">
+            <div class="category-header">
+                <h2>Bordas Recheadas</h2>
+            </div>
+            <div class="category-content">
+                <div class="item-card">
+                    <div class="item-header">Catupiry/Cheddar</div>
+                    <div class="item-body">
+                        <div class="sizes-grid">
+                            <div class="size-item">
+                                <div class="size-name">Pequena</div>
+                                <div class="size-price">R$ 5,00</div>
+                            </div>
+                            <div class="size-item">
+                                <div class="size-name">Média</div>
+                                <div class="size-price">R$ 6,00</div>
+                            </div>
+                            <div class="size-item">
+                                <div class="size-name">Grande</div>
+                                <div class="size-price">R$ 7,00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-card">
+                    <div class="item-header">Chocolate</div>
+                    <div class="item-body">
+                        <div class="sizes-grid">
+                            <div class="size-item">
+                                <div class="size-name">Pequena</div>
+                                <div class="size-price">R$ 6,00</div>
+                            </div>
+                            <div class="size-item">
+                                <div class="size-name">Média</div>
+                                <div class="size-price">R$ 7,00</div>
+                            </div>
+                            <div class="size-item">
+                                <div class="size-name">Grande</div>
+                                <div class="size-price">R$ 8,00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pizzas Salgadas -->
+        <section id="savory-pizzas" class="category visible">
+            <div class="category-header">
+                <h2>Pizzas Salgadas</h2>
+            </div>
+            <div class="category-content">
+                <table class="pizza-table">
+                    <tr>
+                        <th>Sabor</th>
+                        <th>Descrição</th>
+                        <th>Pequena</th>
+                        <th>Média</th>
+                        <th>Grande</th>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">MUSSARELA</td>
+                        <td class="pizza-description">Muçarela, tomate, orégano e azeitona</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">PRESUNTO</td>
+                        <td class="pizza-description">Presunto, muçarela, tomate, orégano e azeitona</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">CALABRESA</td>
+                        <td class="pizza-description">Calabresa, cebola, orégano e azeitona</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">MISTA</td>
+                        <td class="pizza-description">Presunto, muçarela, calabresa, ovos, tomate, orégano e azeitona</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">A MODA DA CASA</td>
+                        <td class="pizza-description">Ingredientes especiais selecionados</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">PALMITO</td>
+                        <td class="pizza-description">Ingredientes especiais selecionados</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">ATUM</td>
+                        <td class="pizza-description">Ingredientes especiais selecionados</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">MILHO</td>
+                        <td class="pizza-description">Ingredientes especiais selecionados</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">MARGUERITA</td>
+                        <td class="pizza-description">Frango desfiado e catupiry</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">FRANGO COM CATUPIRY</td>
+                        <td class="pizza-description">Carne de sol, queijo coalho e cebola</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">CARNE DE SOL</td>
+                        <td class="pizza-description">Carne de sol, cebola e muçarela</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">NORDESTINA</td>
+                        <td class="pizza-description">Carne de sol, queijo coalho e cebola</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">CAIPIRA</td>
+                        <td class="pizza-description">Presunto, muçarela, ovos, cebola, azeitona e tomate</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">PORTUGUESA</td>
+                        <td class="pizza-description">Presunto, muçarela, ovos, cebola, azeitona e tomate</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">TOSCANA</td>
+                        <td class="pizza-description">Presunto, muçarela, ovos, cebola, azeitona e tomate</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">TRÊS QUEIJOS</td>
+                        <td class="pizza-description">Muçarela, catupiry e parmesão</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">BACON</td>
+                        <td class="pizza-description">Bacon e muçarela</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">FRANBACON</td>
+                        <td class="pizza-description">Frango, bacon e catupiry</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">SUECA</td>
+                        <td class="pizza-description">Presunto, bacon, ovos e cebola</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">QUEIROZ</td>
+                        <td class="pizza-description">Presunto, bacon, ovos e cebola</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">SARDINHA</td>
+                        <td class="pizza-description">Sardinha, cebola e muçarela</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">CARNE COM CHEDDAR</td>
+                        <td class="pizza-description">Carne moída e cheddar</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">CARNE COM CATUPIRY</td>
+                        <td class="pizza-description">Carne moída e catupiry</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">FRANGO COM CHEDDAR</td>
+                        <td class="pizza-description">Frango desfiado e cheddar</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">QUATRO QUEIJOS</td>
+                        <td class="pizza-description">Muçarela, catupiry, parmesão e provolone</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">SICILIANA</td>
+                        <td class="pizza-description">Muçarela, catupiry, parmesão e provolone</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">FRANGO</td>
+                        <td class="pizza-description">Muçarela, catupiry, parmesão e provolone</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Pizzas Doces -->
+        <section id="sweet-pizzas" class="category visible">
+            <div class="category-header">
+                <h2>Pizzas Doces</h2>
+            </div>
+            <div class="category-content">
+                <table class="pizza-table">
+                    <tr>
+                        <th>Sabor</th>
+                        <th>Descrição</th>
+                        <th>Pequena</th>
+                        <th>Média</th>
+                        <th>Grande</th>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">CARTOLA</td>
+                        <td class="pizza-description">Leite condensado, muçarela, banana, açúcar e canela</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">BEIJINHO</td>
+                        <td class="pizza-description">Leite condensado, muçarela, chocolate branco e coco</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">CHOCOLATE</td>
+                        <td class="pizza-description">Leite condensado, muçarela e chocolate</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">BRIGADEIRO</td>
+                        <td class="pizza-description">Leite condensado, muçarela, chocolate, granulado e cereja</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">CHOCOBANA</td>
+                        <td class="pizza-description">Leite condensado, muçarela, banana e chocolate</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">CHOCOLATE BRANCO</td>
+                        <td class="pizza-description">Leite condensado, muçarela e chocolate branco</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">CONFETI</td>
+                        <td class="pizza-description">Leite condensado, muçarela, chocolate e confeti</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">DOIS AMORES</td>
+                        <td class="pizza-description">Leite condensado, muçarela, chocolate preto e chocolate branco</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">PRESTÍGIO</td>
+                        <td class="pizza-description">Leite condensado, muçarela, chocolate e coco</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">SENSAÇÃO</td>
+                        <td class="pizza-description">Leite condensado, muçarela, chocolate e morango</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">ROMEU E JULIETA</td>
+                        <td class="pizza-description">Leite condensado, muçarela, goiabada e queijo coalho</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 35,00</td>
+                        <td class="pizza-price">R$ 42,00</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Porções -->
+        <section id="portions" class="category visible">
+            <div class="category-header">
+                <h2>Porções</h2>
+            </div>
+            <div class="category-content">
+                <table class="pizza-table">
+                    <tr>
+                        <th>Item</th>
+                        <th>Pequena</th>
+                        <th>Grande</th>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Batata Frita</td>
+                        <td class="pizza-price">R$ 8,00</td>
+                        <td class="pizza-price">R$ 15,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Calabresa com Fritas</td>
+                        <td class="pizza-price">R$ 18,00</td>
+                        <td class="pizza-price">R$ 32,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Filé com Fritas</td>
+                        <td class="pizza-price">R$ 23,00</td>
+                        <td class="pizza-price">R$ 40,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Filebresa com Fritas</td>
+                        <td class="pizza-price">R$ 25,00</td>
+                        <td class="pizza-price">R$ 45,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Macaxeira</td>
+                        <td class="pizza-price">R$ 4,00</td>
+                        <td class="pizza-price">-</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Cuscuz Simples</td>
+                        <td class="pizza-price">R$ 4,00</td>
+                        <td class="pizza-price">-</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Cuscuz Recheado</td>
+                        <td class="pizza-price">R$ 8,00</td>
+                        <td class="pizza-price">R$ 14,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Ovo (cozido/frito)</td>
+                        <td class="pizza-price">R$ 3,00</td>
+                        <td class="pizza-price">-</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Tapiocas -->
+        <section id="tapiocas-salgadas" class="category visible">
+            <div class="category-header">
+                <h2>Tapiocas Salgadas</h2>
+            </div>
+            <div class="category-content">
+                <table class="pizza-table">
+                    <tr>
+                        <th>Sabor</th>
+                        <th>Preço</th>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Simples</td>
+                        <td class="pizza-price">R$ 3,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Mussarela</td>
+                        <td class="pizza-price">R$ 6,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Mista</td>
+                        <td class="pizza-price">R$ 9,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Nordestina</td>
+                        <td class="pizza-price">R$ 10,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Queijo Coalho</td>
+                        <td class="pizza-price">R$ 8,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Carne de Sol</td>
+                        <td class="pizza-price">R$ 9,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Frango</td>
+                        <td class="pizza-price">R$ 9,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Frango com Catupiry</td>
+                        <td class="pizza-price">R$ 9,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Queiroz</td>
+                        <td class="pizza-price">R$ 10,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Pizza</td>
+                        <td class="pizza-price">R$ 9,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Amostrada</td>
+                        <td class="pizza-price">R$ 15,00</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+        <!-- Tapiocas Doces -->
+        <section id="tapiocas-doces" class="category visible">
+            <div class="category-header">
+                <h2>Tapiocas Doces</h2>
+            </div>
+            <div class="category-content">
+                <table class="pizza-table">
+                    <tr>
+                        <th>Sabor</th>
+                        <th>Preço</th>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Leite Condensado</td>
+                        <td class="pizza-price">R$ 6,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Chocolate</td>
+                        <td class="pizza-price">R$ 8,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Romeu e Julieta</td>
+                        <td class="pizza-price">R$ 6,00</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Bebidas -->
+        <section id="drinks" class="category visible">
+            <div class="category-header">
+                <h2>Bebidas</h2>
+            </div>
+            <div class="category-content">
+                <table class="pizza-table">
+                    <tr>
+                        <th>Item</th>
+                        <th>Preço</th>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Guaraná Lata</td>
+                        <td class="pizza-price">R$ 5,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Coca-Cola Lata</td>
+                        <td class="pizza-price">R$ 5,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Guaraná 1L</td>
+                        <td class="pizza-price">R$ 9,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Coca-Cola 1L</td>
+                        <td class="pizza-price">R$ 9,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Água Mineral</td>
+                        <td class="pizza-price">R$ 3,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Água com Gás</td>
+                        <td class="pizza-price">R$ 4,00</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">Sucos (Com ou sem leite)</td>
+                        <td class="pizza-price">R$ 5,00</td>
+                    </tr>
+                </table>
+                <p style="margin-top: 15px; font-style: italic;">
+                    Sabores: Uva, ameixa, goiaba, graviola, maracujá, acerola, abacaxi, abacaxi com hortelã, caju, cajá, limão, manga
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Faça seu pedido agora mesmo!</p>
+        <a href="https://wa.me/558399704572" class="whatsapp-btn" target="_blank">
+            <i class="fab fa-whatsapp"></i> Pedir por WhatsApp
+        </a>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navegação por botões
+            const navButtons = document.querySelectorAll('.nav-btn');
+            
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    const targetCategory = document.getElementById(targetId);
+                    
+                    if (targetCategory) {
+                        // Scroll suave até a categoria
+                        targetCategory.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+            
+            // Animação de aparecimento ao scroll
+            function checkVisibility() {
+                const categories = document.querySelectorAll('.category');
+                categories.forEach(category => {
+                    const rect = category.getBoundingClientRect();
+                    if (rect.top < window.innerHeight - 100) {
+                        category.classList.add('visible');
+                    }
+                });
+            }
+            
+            // Verificar visibilidade inicial e ao scroll
+            checkVisibility();
+            window.addEventListener('scroll', checkVisibility);
+        });
+    </script>
+</body>
+</html>
