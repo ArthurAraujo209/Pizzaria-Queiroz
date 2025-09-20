@@ -18,6 +18,10 @@
             --transition: all 0.3s ease;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -295,11 +299,12 @@
             border-radius: 25px;
             text-decoration: none;
             font-weight: bold;
-            transition: 0.3s;
+            transition: var(--transition);
         }
 
         .btn:hover {
             background: #eaeaea;
+            transition: var(--transition);
         }
 
         @keyframes fadeIn {
@@ -371,7 +376,7 @@
         <section class="banner">
             <h1>🍕 As melhores pizzas da região!</h1>
             <p>Sabor, qualidade e tradição em cada fatia.</p>
-            <a href="#cardapio" class="btn">Ver Cardápio</a>
+            <a href="#sizes" class="btn">Ver Cardápio</a>
         </section>
 
         <div class="section-divider"></div>
